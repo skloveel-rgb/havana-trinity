@@ -137,11 +137,19 @@ body {
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
+    position: relative;
+    z-index: 10;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
+}
+
+.mode-tab * {
+    pointer-events: none;
 }
 
 .mode-tab:hover {

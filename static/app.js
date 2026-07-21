@@ -125,15 +125,25 @@ document.addEventListener('DOMContentLoaded', () => {
         sectionDetailInput.style.display = 'none';
     });
 
-    // 3. Mode Switcher
+    // 3. Mode Switcher (모바일 터치 및 PC 클릭 완벽 대응)
     modeTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
+        let touchFired = false;
+        const switchMode = (e) => {
+            if (e.type === 'touchstart') {
+                touchFired = true;
+            } else if (e.type === 'click' && touchFired) {
+                touchFired = false;
+                return;
+            }
             modeTabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
             currentMode = tab.dataset.mode;
             updateUIForMode(currentMode);
             runDiagnosis();
-        });
+        };
+
+        tab.addEventListener('click', switchMode);
+        tab.addEventListener('touchstart', switchMode, { passive: true });
     });
 
         const toggleContainer = document.getElementById('toggle-container');
