@@ -710,3 +710,179 @@ body {
     margin-bottom: 16px;
     opacity: 0.5;
 }
+
+/* ==========================================
+   📱 모바일 & 태블릿 반응형 CSS (Responsive)
+   ========================================== */
+@media (max-width: 768px) {
+    .app-container {
+        padding: 12px;
+    }
+    
+    .app-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 16px;
+        gap: 14px;
+        border-radius: 16px;
+    }
+    
+    .logo-area {
+        gap: 12px;
+    }
+    
+    .logo-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+        border-radius: 10px;
+    }
+    
+    .logo-area h1 {
+        font-size: 17px;
+    }
+    
+    .logo-area p {
+        font-size: 11.5px;
+    }
+    
+    .header-stats {
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .stat-badge {
+        flex: 1;
+        text-align: center;
+        padding: 6px 10px;
+        font-size: 11.5px;
+    }
+    
+    .mode-tabs {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .mode-tab {
+        padding: 12px 14px;
+        font-size: 13.5px;
+        border-radius: 12px;
+    }
+    
+    .glass-card {
+        padding: 16px;
+        border-radius: 16px;
+        margin-bottom: 16px;
+    }
+    
+    .input-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .input-header h2 {
+        font-size: 16px;
+    }
+    
+    .score-control {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+    }
+    
+    .direct-primary-input-wrapper {
+        justify-content: center;
+        width: 100%;
+        padding: 8px 12px;
+    }
+    
+    .direct-main-field {
+        font-size: 24px;
+        width: 90px;
+    }
+    
+    .direct-main-unit {
+        font-size: 16px;
+    }
+    
+    .score-slider-bar {
+        width: 100%;
+    }
+    
+    .filters-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+    
+    .filter-group select {
+        padding: 10px 12px;
+        font-size: 13px;
+        border-radius: 10px;
+    }
+    
+    .status-bar {
+        gap: 8px;
+        padding-bottom: 6px;
+    }
+    
+    .status-chip {
+        padding: 8px 14px;
+        font-size: 12.5px;
+    }
+    
+    .section-title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .section-title h3 {
+        font-size: 16px;
+    }
+    
+    .search-keyword-box {
+        width: 100%;
+    }
+    
+    .results-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .res-card {
+        padding: 16px;
+        border-radius: 14px;
+    }
+    
+    .res-univ {
+        font-size: 15.5px;
+    }
+    
+    .res-dept {
+        font-size: 14px;
+    }
+    
+    .res-details {
+        grid-template-columns: 1fr;
+    }
+    
+    .cutoff-3yr-box, .req-box, .elem-box {
+        grid-column: span 1;
+    }
+    
+    .detail-input-container {
+        padding: 14px;
+    }
+    
+    .table-actions {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+    
+    .calculated-summary {
+        justify-content: center;
+    }
+}
