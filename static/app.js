@@ -523,17 +523,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Compute total counts across ALL currentResults
-        const sosoCount = currentResults.filter(i => i.status.includes('소신')).length;
-        const fitCount = currentResults.filter(i => i.status.includes('적정')).length;
-        const safeCount = currentResults.filter(i => i.status.includes('안정')).length;
-
-        document.getElementById('count-soso').textContent = sosoCount.toLocaleString();
-        document.getElementById('count-fit').textContent = fitCount.toLocaleString();
-        document.getElementById('count-safe').textContent = safeCount.toLocaleString();
-
-        let filtered = currentResults.filter(item => {
-            if (currentStatusFilter !== '전체' && !item.status.includes(currentStatusFilter)) return false;
+        // Compute base filtered results (department & keyword filtering applied first)
+        let baseFiltered = currentResults.filter(item => {
             if (selectedDept && item.department !== selectedDept) return false;
             if (kw.length > 0) {
                 const text = `${item.univ} ${item.department} ${item.type || ''} ${item.sub_type || ''}`.toLowerCase();
@@ -542,8 +533,22 @@ document.addEventListener('DOMContentLoaded', () => {
             return true;
         });
 
+        // Compute dynamic counts across baseFiltered items
+        const sosoCount = baseFiltered.filter(i => i.status.includes('소신')).length;
+        const fitCount = baseFiltered.filter(i => i.status.includes('적정')).length;
+        const safeCount = baseFiltered.filter(i => i.status.includes('안정')).length;
+
+        document.getElementById('count-soso').textContent = sosoCount.toLocaleString();
+        document.getElementById('count-fit').textContent = fitCount.toLocaleString();
+        document.getElementById('count-safe').textContent = safeCount.toLocaleString();
+        document.getElementById('count-all').textContent = baseFiltered.length.toLocaleString();
+
+        let filtered = baseFiltered.filter(item => {
+            if (currentStatusFilter !== '전체' && !item.status.includes(currentStatusFilter)) return false;
+            return true;
+        });
+
         statusBar.style.display = 'flex';
-        document.getElementById('count-all').textContent = currentResults.length.toLocaleString();
 
         if (filtered.length === 0) {
             resultsContainer.innerHTML = `
