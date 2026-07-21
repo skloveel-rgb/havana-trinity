@@ -575,9 +575,9 @@ class AdmissionDataEngine:
             })
             
         if sort_by == "rank":
-            results.sort(key=lambda x: (x['tier'], x['status_code'], x['cutoff_3yr']))
+            results.sort(key=lambda x: (x['tier'], x['status_code'], x['cutoff_3yr'], x['univ'], x['department']))
         else: # status 기본 (소신(0) -> 적정(1) -> 안정(2))
-            results.sort(key=lambda x: (x['status_code'], x['tier'], x['cutoff_3yr']))
+            results.sort(key=lambda x: (x['status_code'], x['tier'], x['cutoff_3yr'], x['univ'], x['department']))
 
         return results
 
@@ -675,9 +675,9 @@ class AdmissionDataEngine:
             })
             
         if sort_by == "rank":
-            results.sort(key=lambda x: (x['tier'], -x['status_code'], -x['cutoff_3yr']))
-        else: # status 기본 (소신->적정->안정)
-            results.sort(key=lambda x: (-x['status_code'], x['tier'], -x['cutoff_3yr']))
+            results.sort(key=lambda x: (x['tier'], x['status_code'], -x['cutoff_3yr'], x['univ'], x['department']))
+        else: # status 기본 (소신(0) -> 적정(1) -> 안정(2))
+            results.sort(key=lambda x: (x['status_code'], x['tier'], -x['cutoff_3yr'], x['univ'], x['department']))
 
         return results
 

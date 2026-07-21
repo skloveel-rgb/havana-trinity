@@ -139,7 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
             tab.classList.add('active');
             currentMode = tab.dataset.mode;
             updateUIForMode(currentMode);
-            runDiagnosis();
         };
 
         tab.addEventListener('click', switchMode);
@@ -489,23 +488,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    const filterDeptSelect = document.getElementById('filter-dept');
-    if (filterDeptSelect) {
-        filterDeptSelect.addEventListener('change', () => {
-            runDiagnosis();
-        });
-    }
-
-    const filterUnivTypeSelect = document.getElementById('filter-univ-type');
-    if (filterUnivTypeSelect) {
-        filterUnivTypeSelect.addEventListener('change', runDiagnosis);
-    }
-
-    filterRegion.addEventListener('change', runDiagnosis);
-    filterCategory.addEventListener('change', runDiagnosis);
-    filterType.addEventListener('change', runDiagnosis);
+    // Search is triggered STRICTLY when 'btnSearch' (하바나-트리니티 엔진 가동) is clicked!
     keywordSearch.addEventListener('input', () => {
-        renderResults();
+        if (currentResults.length > 0) {
+            renderResults();
+        }
     });
 
     // 6. Render Results
