@@ -136,8 +136,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    function updateUIForMode(mode) {
+        const toggleContainer = document.getElementById('toggle-container');
+
         if (mode === 'susi-gpa') {
+            if (toggleContainer) toggleContainer.style.display = 'flex';
+            if (inputMethod === 'quick') {
+                sectionQuickInput.style.display = 'block';
+                sectionDetailInput.style.display = 'none';
+            } else {
+                sectionQuickInput.style.display = 'none';
+                sectionDetailInput.style.display = 'block';
+            }
             detailGuideText.textContent = '과목별 이수 단위수와 석차 등급을 입력하시면 단위수 가중평균 내신 등급이 자동 계산됩니다.';
             scoreLabel.textContent = '전과목 내신 평균 등급 (1.0 ~ 9.0 등급)';
             scoreUnit.textContent = '등급';
@@ -154,6 +163,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 <option value="논술">논술전형</option>
             `;
         } else if (mode === 'susi-ged') {
+            if (toggleContainer) toggleContainer.style.display = 'flex';
+            if (inputMethod === 'quick') {
+                sectionQuickInput.style.display = 'block';
+                sectionDetailInput.style.display = 'none';
+            } else {
+                sectionQuickInput.style.display = 'none';
+                sectionDetailInput.style.display = 'block';
+            }
             detailGuideText.textContent = '검정고시 과목별 원점수(0~100점)만 입력하시면 전과목 원점수 평균 및 대학별 환산 등급이 자동 계산됩니다.';
             scoreLabel.textContent = '검정고시 전과목 평균 점수 (0 ~ 100점)';
             scoreUnit.textContent = '점';
@@ -170,7 +187,11 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             if (filterType.value === '학생부종합') filterType.value = '전체';
         } else if (mode === 'jungsi-sat') {
-            detailGuideText.textContent = '수능 영역별 원점수, 백분위, 표준점수를 입력하시면 3개년 백분위 컷 기반으로 정시 지원이 진단됩니다.';
+            // 정시 모드: 평균 백분위 박스를 완전히 숨기고, 과목별 점수 입력창만 전면 배치
+            if (toggleContainer) toggleContainer.style.display = 'none';
+            sectionQuickInput.style.display = 'none';
+            sectionDetailInput.style.display = 'block';
+            detailGuideText.textContent = '수능 과목별 원점수 및 백분위(국/수/영/탐1/탐2)를 입력하시면 3개년 백분위 컷 기반으로 정시 지원이 자동 진단됩니다.';
             scoreLabel.textContent = '수능 국/수/탐 평균 백분위 (0 ~ 100점)';
             scoreUnit.textContent = '점';
             scoreInput.min = '0'; scoreInput.max = '100'; scoreInput.value = '85.0';
@@ -389,7 +410,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (currentMode === 'susi-gpa' || currentMode === 'susi-ged') {
             const inputType = currentMode === 'susi-gpa' ? 'gpa' : 'ged';
-            const url = `/api/analyze/susi?input_type=${inputType}&score=${val}&region=${encodeURIComponent(filterRegion.value)}&category=${encodeURIComponent(filterCategory.value)}&admission_type=${encodeURIComponent(filterType.value)}&univ_type=${encodeURIComponent(univTypeVal)}&limit=50000`;
+            const url = `/api/analyze/susi?input_type=${inputType}&score=${val}&region=${encodeURIComponent(filterRegion.value)}&category=${encodeURIComponent(filterCategory.value)}&admission_type=${encodeURIComponent(filterType.value)}&univ_type=${encodeURIComponent(univTypeVal)}&limit=3000`;
             
             fetch(url)
                 .then(res => res.json())
@@ -399,7 +420,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     renderResults();
                 });
         } else {
-            const url = `/api/analyze/jungsi?percentile=${val}&region=${encodeURIComponent(filterRegion.value)}&limit=50000`;
+            const url = `/api/analyze/jungsi?percentile=${val}&region=${encodeURIComponent(filterRegion.value)}&limit=3000`;
             
             fetch(url)
                 .then(res => res.json())
