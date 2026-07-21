@@ -390,10 +390,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderSubjectTable();
 
-    // 5. Search Trigger
-    btnSearch.addEventListener('click', runDiagnosis);
+    // 5. Search Trigger (하바나-트리니티 엔진 가동 버튼 클릭 시 동작)
+    if (btnSearch) {
+        btnSearch.addEventListener('click', (e) => {
+            e.preventDefault();
+            btnSearch.style.transform = 'scale(0.96)';
+            setTimeout(() => { btnSearch.style.transform = 'none'; }, 150);
+            runDiagnosis(true);
+        });
+    }
 
-    function runDiagnosis() {
+    function runDiagnosis(isManualClick = false) {
         let val = parseFloat(calcScoreInput.value);
         if (isNaN(val)) val = parseFloat(scoreInput.value);
         if (isNaN(val)) return;
@@ -404,6 +411,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p>하바나-트리니티 대입 엔진 가동 중입니다 (전국 모집단위 종합 산출 중)...</p>
             </div>
         `;
+
+        if (isManualClick) {
+            const statusBar = document.getElementById('status-bar');
+            if (statusBar) {
+                statusBar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
 
         const filterUnivType = document.getElementById('filter-univ-type');
         const univTypeVal = filterUnivType ? filterUnivType.value : '전체';
