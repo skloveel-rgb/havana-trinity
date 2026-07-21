@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const avgVal = avg.toFixed(2);
         calcScoreInput.value = avgVal;
         scoreInput.value = avgVal;
-        scoreSlider.value = avgVal;
+        if (scoreSlider) scoreSlider.value = avgVal;
     }
 
     function recalcGED() {
@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const avgVal = avg.toFixed(1);
         calcScoreInput.value = avgVal;
         scoreInput.value = avgVal;
-        scoreSlider.value = avgVal;
+        if (scoreSlider) scoreSlider.value = avgVal;
     }
 
     function recalcSAT() {
@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const avgVal = avgP.toFixed(1);
         calcScoreInput.value = avgVal;
         scoreInput.value = avgVal;
-        scoreSlider.value = avgVal;
+        if (scoreSlider) scoreSlider.value = avgVal;
     }
 
     function renderSubjectTable() {
@@ -401,9 +401,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function runDiagnosis(isManualClick = false) {
-        let val = parseFloat(calcScoreInput.value);
-        if (isNaN(val)) val = parseFloat(scoreInput.value);
-        if (isNaN(val)) return;
+        let val = parseFloat(calcScoreInput ? calcScoreInput.value : '');
+        if (isNaN(val)) val = parseFloat(scoreInput ? scoreInput.value : '');
+        if (isNaN(val)) {
+            if (currentMode === 'susi-gpa') val = 2.15;
+            else if (currentMode === 'susi-ged') val = 96.1;
+            else val = 85.0;
+        }
 
         resultsContainer.innerHTML = `
             <div class="empty-state">
