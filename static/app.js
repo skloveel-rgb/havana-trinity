@@ -647,7 +647,20 @@ document.addEventListener('DOMContentLoaded', () => {
         resultsContainer.innerHTML = html;
     }
 
-    // Run diagnosis on initial page load for GED default mode
+    // Initialize UI for GED default mode without auto-running engine on page load
     updateUIForMode('susi-ged');
-    runDiagnosis();
+    
+    // Set initial welcome state for results container
+    if (resultsContainer) {
+        resultsContainer.innerHTML = `
+            <div class="empty-state" style="padding: 48px 24px; text-align: center;">
+                <i class="fa-solid fa-rocket" style="font-size: 48px; color: #818cf8; margin-bottom: 16px;"></i>
+                <h3 style="font-size: 18px; font-weight: 700; color: #f8fafc; margin-bottom: 8px;">하바나-트리니티 대입 진단 엔진 준비 완료</h3>
+                <p style="font-size: 14.5px; color: #94a3b8; max-width: 500px; margin: 0 auto 20px auto;">성적 및 진단 조건을 확인하신 후 <strong style="color: #c7d2fe;">[🚀 하바나-트리니티 엔진 가동]</strong> 버튼을 누르시면 3개년 합격 추이 기반 소신·적정·안정 분석 결과가 펼쳐집니다.</p>
+            </div>
+        `;
+    }
+    if (statusBar) {
+        statusBar.style.display = 'none';
+    }
 });
