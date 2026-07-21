@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 하바나-트리니티 대입 엔진 | 수시·정시 3개년 입결 종합 산출</title>
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header Banner -->
+        <header class="app-header">
+            <div class="logo-area">
+                <div class="logo-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+                <div>
+                    <h1>2026 하바나-트리니티 대입 엔진 <span>ULTIMATE PRO</span></h1>
+                    <p>전국 대학 3개년 입결 추이 분석 & 수능/내신/검정고시 종합 산출 플랫폼</p>
+                </div>
+            </div>
+            <div class="header-stats" id="header-stats">
+                <div class="stat-badge"><i class="fa-solid fa-database"></i> 수시 모집단위: <strong id="stat-susi">-</strong>개</div>
+                <div class="stat-badge"><i class="fa-solid fa-chart-pie"></i> 정시 모집단위: <strong id="stat-jungsi">-</strong>개</div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Mode Switcher Tabs -->
+            <div class="mode-tabs">
+                <button class="mode-tab active" data-mode="susi-gpa">
+                    <i class="fa-solid fa-school"></i> [수시] 고교 내신 디테일 진단
+                </button>
+                <button class="mode-tab" data-mode="susi-ged">
+                    <i class="fa-solid fa-award"></i> [수시] 검정고시 과목별 원점수 환산
+                </button>
+                <button class="mode-tab" data-mode="jungsi-sat">
+                    <i class="fa-solid fa-bullseye"></i> [정시] 수능 (원점수/백분위/표준점수) 진단
+                </button>
+            </div>
+
+            <!-- Input & Filter Section -->
+            <div class="card glass-card input-card">
+                <div class="input-header">
+                    <h2 id="input-title"><i class="fa-solid fa-pen-to-square"></i> 하바나-트리니티 성적 입력 & 조건 설정</h2>
+                    <div class="input-method-toggle" id="toggle-container">
+                        <button class="toggle-btn active" id="btn-toggle-quick"><i class="fa-solid fa-pen-to-square"></i> 점수 직접 입력 (기본)</button>
+                        <button class="toggle-btn" id="btn-toggle-detail"><i class="fa-solid fa-calculator"></i> 과목별 상세 계산</button>
+                    </div>
+                </div>
+
+                <div class="input-body">
+                    <!-- 1. Direct Score Input Box (Primary Default View) -->
+                    <div id="section-quick-input" class="score-input-box">
+                        <label for="score-input" id="score-label">검정고시 전과목 평균 점수 (0 ~ 100점)</label>
+                        <div class="score-control">
+                            <div class="direct-primary-input-wrapper">
+                                <input type="number" id="score-input" min="0" max="100" step="0.1" value="95.0" class="direct-main-field" placeholder="직접 입력">
+                                <span id="score-unit" class="direct-main-unit">점</span>
+                            </div>
+                            <input type="range" id="score-slider" min="50" max="100" step="0.1" value="95.0" class="score-slider-bar">
+                        </div>
+                        <div class="score-hint" id="score-hint">
+                            💡 원하시는 성적(예: 96.1, 98.5 등)을 보라색 숫자에 <strong>직접 타이핑</strong>하시거나 오른쪽 슬라이더를 조절하세요.
+                        </div>
+                    </div>
+
+                    <!-- 2. Detailed Subject Input Section (Secondary / Collapsible) -->
+                    <div id="section-detail-input" class="detail-input-container" style="display: none;">
+                        <div class="detail-header-info" id="detail-header-info">
+                            <i class="fa-solid fa-calculator"></i>
+                            <span id="detail-guide-text">과목별 성적을 입력하시면 단위수 및 원점수 평균이 자동 계산됩니다.</span>
+                        </div>
+                        
+                        <!-- Dynamic Subject Table -->
+                        <div class="subject-table-wrapper">
+                            <table class="subject-table">
+                                <thead id="subject-table-head">
+                                    <!-- Dynamic Table Head -->
+                                </thead>
+                                <tbody id="subject-table-body">
+                                    <!-- Rows populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="table-actions">
+                            <button type="button" class="btn btn-outline" id="btn-add-subject">
+                                <i class="fa-solid fa-plus"></i> 과목 추가하기
+                            </button>
+                            <div class="calculated-summary">
+                                <span class="summary-label" id="summary-label"><i class="fa-solid fa-pen-to-square"></i> 계산된 성적:</span>
+                                <div class="direct-score-wrapper">
+                                    <input type="number" id="calc-score-input" step="0.1" value="95.0" class="direct-score-input">
+                                    <span class="summary-unit" id="calc-avg-unit">점</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filters & Sort Options Grid -->
+                    <div class="filters-grid" style="margin-top: 24px;">
+                        <div class="filter-group" id="group-univ-type">
+                            <label><i class="fa-solid fa-building-columns"></i> 설립 구분 (국공립/사립)</label>
+                            <select id="filter-univ-type">
+                                <option value="전체" selected>전체 (국공립 + 사립)</option>
+                                <option value="국공립">🏛️ 국공립대학만 보기</option>
+                                <option value="사립">🏫 사립대학만 보기</option>
+                            </select>
+                        </div>
+
+                        <div class="filter-group">
+                            <label><i class="fa-solid fa-location-dot"></i> 대학 지역</label>
+                            <select id="filter-region">
+                                <option value="전체">전체 지역</option>
+                                <option value="서울">서울</option>
+                                <option value="경기">경기</option>
+                                <option value="인천">인천</option>
+                                <option value="충남">충남/대전</option>
+                                <option value="충북">충북/세종</option>
+                                <option value="경북">경북/대구</option>
+                                <option value="경남">경남/부산/울산</option>
+                                <option value="전북">전북</option>
+                                <option value="전남">전남/광주</option>
+                                <option value="강원">강원</option>
+                                <option value="제주">제주</option>
+                            </select>
+                        </div>
+
+                        <div class="filter-group" id="group-category">
+                            <label><i class="fa-solid fa-layer-group"></i> 계열 구분</label>
+                            <select id="filter-category">
+                                <option value="전체">전체 계열</option>
+                                <option value="인문">인문계열</option>
+                                <option value="자연">자연계열</option>
+                                <option value="의약">의약/간호계열</option>
+                                <option value="예체능">예체능계열</option>
+                            </select>
+                        </div>
+
+                        <div class="filter-group" id="group-type">
+                            <label><i class="fa-solid fa-filter"></i> 전형 유형</label>
+                            <select id="filter-type">
+                                <option value="전체">전체 전형</option>
+                                <option value="학생부교과">학생부교과전형</option>
+                                <option value="학생부종합">학생부종합전형</option>
+                                <option value="논술">논술전형</option>
+                            </select>
+                        </div>
+
+                        <div class="filter-group" id="group-dept">
+                            <label><i class="fa-solid fa-graduation-cap"></i> 희망 학과 선택 (가나다순 목록)</label>
+                            <select id="filter-dept">
+                                <option value="">전체 학과 목록 (가나다순)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Search Action Button -->
+                    <div class="action-box">
+                        <button class="btn btn-primary" id="btn-search">
+                            <i class="fa-solid fa-rocket"></i> 하바나-트리니티 엔진 가동
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Summary Status Bar (Clickable Filter Chips) -->
+            <div class="status-bar" id="status-bar" style="display: none;">
+                <div class="status-chip chip-all clickable-chip" data-status="전체" id="chip-all-btn">
+                    <i class="fa-solid fa-list-check"></i> 총 지원가능 전형: <span id="count-all">0</span>건
+                </div>
+                <div class="status-chip chip-soso clickable-chip" data-status="소신" id="chip-soso-btn">
+                    <i class="fa-solid fa-bolt"></i> 소신 (경쟁적): <span id="count-soso">0</span>건
+                </div>
+                <div class="status-chip chip-fit clickable-chip" data-status="적정" id="chip-fit-btn">
+                    <i class="fa-solid fa-thumbs-up"></i> 적정 (합격유력): <span id="count-fit">0</span>건
+                </div>
+                <div class="status-chip chip-safe clickable-chip" data-status="안정" id="chip-safe-btn">
+                    <i class="fa-solid fa-circle-check"></i> 안정 (매우유리): <span id="count-safe">0</span>건
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section">
+                <div class="section-title">
+                    <h3><i class="fa-solid fa-list-ol"></i> 하바나-트리니티 진단 결과 (소신 ➔ 적정 ➔ 안정 순)</h3>
+                    <div class="search-keyword-box">
+                        <input type="text" id="keyword-search" placeholder="대학명 또는 학과명 빠른 검색...">
+                        <i class="fa-solid fa-search"></i>
+                    </div>
+                </div>
+
+                <!-- Results Grid Container -->
+                <div id="results-container" class="results-container">
+                    <div class="empty-state">
+                        <i class="fa-solid fa-magnifying-glass-chart"></i>
+                        <p>성적을 입력하고 [하바나-트리니티 엔진 가동] 버튼을 눌러주세요.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
