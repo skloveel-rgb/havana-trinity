@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    let currentMode = 'susi-gpa';
-    let inputMethod = 'detail';
+    let currentMode = 'susi-ged';
+    let inputMethod = 'quick';
     let currentResults = [];
 
     const defaultGPASubjects = [
@@ -647,6 +647,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resultsContainer.innerHTML = html;
     }
 
-    // Run diagnosis on initial page load
+    // Run diagnosis on initial page load for GED default mode
+    updateUIForMode('susi-ged');
     runDiagnosis();
 });

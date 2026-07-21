@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/static/style.css?v=20260721_v9">
+    <link rel="stylesheet" href="/static/style.css?v=20260721_v10">
 </head>
 <body>
     <div class="app-container">
@@ -32,10 +32,10 @@
         <main class="main-content">
             <!-- Mode Switcher Tabs -->
             <div class="mode-tabs">
-                <button class="mode-tab active" data-mode="susi-gpa">
+                <button class="mode-tab" data-mode="susi-gpa">
                     <i class="fa-solid fa-school"></i> [수시] 고교 내신 디테일 진단
                 </button>
-                <button class="mode-tab" data-mode="susi-ged">
+                <button class="mode-tab active" data-mode="susi-ged">
                     <i class="fa-solid fa-award"></i> [수시] 검정고시 과목별 원점수 환산
                 </button>
                 <button class="mode-tab" data-mode="jungsi-sat">
@@ -59,8 +59,8 @@
                         <label for="score-input" id="score-label">검정고시 전과목 평균 점수 (0 ~ 100점)</label>
                         <div class="score-control">
                             <div class="direct-primary-input-wrapper">
-                                <input type="number" id="score-input" min="0" max="100" step="0.01" value="2.15" class="direct-main-field" placeholder="직접 입력">
-                                <span id="score-unit" class="direct-main-unit">등급</span>
+                                <input type="number" id="score-input" min="0" max="100" step="0.1" value="96.1" class="direct-main-field" placeholder="직접 입력">
+                                <span id="score-unit" class="direct-main-unit">점</span>
                             </div>
                         </div>
                         <div class="score-hint" id="score-hint">
@@ -205,6 +205,6 @@
         </main>
     </div>
 
-    <script src="/static/app.js?v=20260721_v9"></script>
+    <script src="/static/app.js?v=20260721_v10"></script>
 </body>
 </html>
