@@ -5,6 +5,8 @@ import numpy as np
 
 SUSI_EXCEL_PATH = os.path.join(os.path.dirname(__file__), "2026 IDA입시연구소 수시배치표 ver.10 통합엑셀.xlsx")
 JUNGSI_EXCEL_PATH = os.path.join(os.path.dirname(__file__), "정시_전국.xlsx")
+SUSI_CACHE_PKL = os.path.join(os.path.dirname(__file__), "susi_cache.pkl")
+JUNGSI_CACHE_PKL = os.path.join(os.path.dirname(__file__), "jungsi_cache.pkl")
 
 UNIV_RANK_TIER = {
     "서울대": 1, "서울대학교": 1, "연세대": 2, "연세대학교": 2, "고려대": 2, "고려대학교": 2,
@@ -240,7 +242,16 @@ class AdmissionDataEngine:
 
     def _load_data(self):
         print("하바나-트리니티 대입 데이터 로딩 중...")
-        if os.path.exists(SUSI_EXCEL_PATH):
+        # 1. 수시 데이터 캐시 빠른 로드
+        if os.path.exists(SUSI_CACHE_PKL):
+            try:
+                self.df_susi = pd.read_pickle(SUSI_CACHE_PKL)
+                print(f"수시 데이터 캐시 로드 완료: {len(self.df_susi)}개 모집단위")
+            except Exception as e:
+                print(f"수시 캐시 실패: {e}")
+                self.df_susi = None
+
+        if self.df_susi is None and os.path.exists(SUSI_EXCEL_PATH):
             try:
                 df_s = pd.read_excel(SUSI_EXCEL_PATH, sheet_name="전체 대학", header=3)
                 cols = df_s.columns.tolist()
@@ -279,12 +290,25 @@ class AdmissionDataEngine:
                 df_s['Univ_Tier'] = df_s['대학'].apply(self.get_univ_tier)
                 
                 self.df_susi = df_s
-                print(f"수시 데이터 로드 완료: {len(df_s)}개 모집단위")
+                try:
+                    df_s.to_pickle(SUSI_CACHE_PKL)
+                except Exception:
+                    pass
+                print(f"수시 데이터 엑셀 로드 및 캐시 저장 완료: {len(df_s)}개 모집단위")
             except Exception as e:
                 print(f"수시 데이터 로드 실패: {e}")
                 self.df_susi = pd.DataFrame()
 
-        if os.path.exists(JUNGSI_EXCEL_PATH):
+        # 2. 정시 데이터 캐시 빠른 로드
+        if os.path.exists(JUNGSI_CACHE_PKL):
+            try:
+                self.df_jungsi = pd.read_pickle(JUNGSI_CACHE_PKL)
+                print(f"정시 데이터 캐시 로드 완료: {len(self.df_jungsi)}개 모집단위")
+            except Exception as e:
+                print(f"정시 캐시 실패: {e}")
+                self.df_jungsi = None
+
+        if self.df_jungsi is None and os.path.exists(JUNGSI_EXCEL_PATH):
             try:
                 df_j = pd.read_excel(JUNGSI_EXCEL_PATH, sheet_name="Sheet1", header=3)
                 cols_j = df_j.columns.tolist()
@@ -316,7 +340,11 @@ class AdmissionDataEngine:
                 df_j['Univ_Tier'] = df_j['대학'].apply(self.get_univ_tier)
                 
                 self.df_jungsi = df_j
-                print(f"정시 데이터 로드 완료: {len(df_j)}개 모집단위")
+                try:
+                    df_j.to_pickle(JUNGSI_CACHE_PKL)
+                except Exception:
+                    pass
+                print(f"정시 데이터 엑셀 로드 및 캐시 저장 완료: {len(df_j)}개 모집단위")
             except Exception as e:
                 print(f"정시 데이터 로드 실패: {e}")
                 self.df_jungsi = pd.DataFrame()
