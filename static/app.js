@@ -439,7 +439,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (currentMode === 'susi-gpa' || currentMode === 'susi-ged') {
             const inputType = currentMode === 'susi-gpa' ? 'gpa' : 'ged';
-            const url = `/api/analyze/susi?input_type=${inputType}&score=${val}&region=${encodeURIComponent(filterRegion.value)}&category=${encodeURIComponent(filterCategory.value)}&admission_type=${encodeURIComponent(filterType.value)}&univ_type=${encodeURIComponent(univTypeVal)}&limit=3000`;
+            const url = `/api/analyze/susi?input_type=${inputType}&score=${val}&region=${encodeURIComponent(filterRegion.value)}&category=${encodeURIComponent(filterCategory.value)}&admission_type=${encodeURIComponent(filterType.value)}&univ_type=${encodeURIComponent(univTypeVal)}&limit=1500`;
             
             fetch(url)
                 .then(res => res.json())
@@ -449,7 +449,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     renderResults();
                 });
         } else {
-            const url = `/api/analyze/jungsi?percentile=${val}&region=${encodeURIComponent(filterRegion.value)}&limit=3000`;
+            const url = `/api/analyze/jungsi?percentile=${val}&region=${encodeURIComponent(filterRegion.value)}&limit=1500`;
             
             fetch(url)
                 .then(res => res.json())
@@ -549,16 +549,16 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Render top 300 cards for high performance while keeping exact totals
-        const displayList = filtered.slice(0, 300);
+        // Render top 150 cards for lightning fast performance while keeping exact totals
+        const displayList = filtered.slice(0, 150);
 
         let html = '';
 
-        if (filtered.length > 300) {
+        if (filtered.length > 150) {
             html += `
                 <div style="background: rgba(99, 102, 241, 0.12); border: 1px solid rgba(99, 102, 241, 0.3); color: #c7d2fe; padding: 12px 20px; border-radius: 14px; font-size: 13.5px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;">
-                    <span><i class="fa-solid fa-circle-info"></i> 총 <strong>${filtered.length.toLocaleString()}</strong>개 전형 중 <strong>상위 300개</strong> 결과 카드 표시 중</span>
-                    <span style="font-size: 12px; color: #a5b4fc;">* 상단 [소신/적정/안정] 뱃지 또는 학과 목록 필터를 이용하시면 원하는 결과 항목을 더 편리하게 조망하실 수 있습니다.</span>
+                    <span><i class="fa-solid fa-circle-info"></i> 총 <strong>${filtered.length.toLocaleString()}</strong>개 모집단위 중 <strong>소신 우선 (상위 150개)</strong> 표시 중</span>
+                    <span style="font-size: 12px; color: #a5b4fc;">* 상단 [소신/적정/안정] 뱃지 또는 학과 목록 필터를 이용하시면 원하시는 항목을 더 빠르게 보실 수 있습니다.</span>
                 </div>
             `;
         }

@@ -528,23 +528,23 @@ class AdmissionDataEngine:
                 
                 if is_nonsul_flag:
                     status = "소신 (논술 100%/비교내신)"
-                    status_code = 4
+                    status_code = 0
                 else:
                     # 사용자 정의 정밀 진단 기준:
-                    # 소신: 환산등급 대비 +0.20 ~ +0.30 등급 상향 (+0.20 <= diff <= +0.30)
-                    # 적정: 환산등급 대비 -0.20 ~ +0.20 등급 (-0.20 <= diff < +0.20)
-                    # 안정: 환산등급 대비 -0.50 등급 하향 (-0.50 <= diff < -0.20)
+                    # 소신: 환산등급 대비 +0.20 ~ +0.30 등급 상향 (+0.20 <= diff <= +0.30) -> 0순위 (최상단)
+                    # 적정: 환산등급 대비 -0.20 ~ +0.20 등급 (-0.20 <= diff < +0.20) -> 1순위
+                    # 안정: 환산등급 대비 -0.50 등급 하향 (-0.50 <= diff < -0.20) -> 2순위
                     if diff > 0.30 or diff < -0.50:
                         continue
                     elif diff >= 0.20:
                         status = "소신 (경쟁적)"
-                        status_code = 2
+                        status_code = 0
                     elif diff >= -0.20:
                         status = "적정 (합격유력)"
                         status_code = 1
                     else:
                         status = "안정 (매우유리)"
-                        status_code = 0
+                        status_code = 2
             
             elements = str(row['전형요소_2026']) if not pd.isna(row['전형요소_2026']) else '학생부 100%'
             requirements = str(row['최저학력기준_2026']) if not pd.isna(row['최저학력기준_2026']) else '없음'
@@ -576,7 +576,7 @@ class AdmissionDataEngine:
             
         if sort_by == "rank":
             results.sort(key=lambda x: (x['tier'], x['status_code'], x['cutoff_3yr']))
-        else: # status 기본 (안정(0) -> 적정(1) -> 소신(2) -> 위험(3) -> 논술(4))
+        else: # status 기본 (소신(0) -> 적정(1) -> 안정(2))
             results.sort(key=lambda x: (x['status_code'], x['tier'], x['cutoff_3yr']))
 
         return results
@@ -639,13 +639,13 @@ class AdmissionDataEngine:
                     continue  # 과도한 상향 도전 제외
                 elif diff < -1.0:
                     status = "소신 (경쟁적)"
-                    status_code = 2
+                    status_code = 0  # 소신 0순위 상단 배치!
                 elif diff <= 3.0:
                     status = "적정 (합격유력)"
                     status_code = 1
                 elif diff <= 10.0:
                     status = "안정 (매우유리)"
-                    status_code = 0
+                    status_code = 2
                 else:
                     continue  # 과도한 하향안정 제외
                     
