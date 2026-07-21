@@ -21,6 +21,16 @@
     padding: 0;
 }
 
+/* 숫자 입력 박스 위아래 화살표(스피너) 완전히 제거 */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
 body {
     font-family: 'Noto Sans KR', 'Outfit', -apple-system, sans-serif;
     background-color: var(--bg-dark);

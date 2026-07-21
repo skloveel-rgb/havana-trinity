@@ -132,6 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tab.classList.add('active');
             currentMode = tab.dataset.mode;
             updateUIForMode(currentMode);
+            runDiagnosis();
         });
     });
 
@@ -140,8 +141,8 @@ document.addEventListener('DOMContentLoaded', () => {
             detailGuideText.textContent = '과목별 이수 단위수와 석차 등급을 입력하시면 단위수 가중평균 내신 등급이 자동 계산됩니다.';
             scoreLabel.textContent = '전과목 내신 평균 등급 (1.0 ~ 9.0 등급)';
             scoreUnit.textContent = '등급';
-            scoreSlider.min = '1.0'; scoreSlider.max = '9.0'; scoreSlider.step = '0.01'; scoreSlider.value = '2.50';
-            scoreInput.min = '1.0'; scoreInput.max = '9.0'; scoreInput.value = '2.50';
+            scoreInput.min = '1.0'; scoreInput.max = '9.0'; scoreInput.value = '2.15';
+            calcScoreInput.value = '2.15';
             scoreHint.textContent = '💡 1.0등급(최상위) ~ 9.0등급(최하위) | 원하시는 등급을 직접 입력하세요.';
             groupCategory.style.display = 'block';
             groupType.style.display = 'block';
@@ -156,8 +157,8 @@ document.addEventListener('DOMContentLoaded', () => {
             detailGuideText.textContent = '검정고시 과목별 원점수(0~100점)만 입력하시면 전과목 원점수 평균 및 대학별 환산 등급이 자동 계산됩니다.';
             scoreLabel.textContent = '검정고시 전과목 평균 점수 (0 ~ 100점)';
             scoreUnit.textContent = '점';
-            scoreSlider.min = '50'; scoreSlider.max = '100'; scoreSlider.step = '0.1'; scoreSlider.value = '95.0';
-            scoreInput.min = '0'; scoreInput.max = '100'; scoreInput.value = '95.0';
+            scoreInput.min = '0'; scoreInput.max = '100'; scoreInput.value = '96.1';
+            calcScoreInput.value = '96.1';
             scoreHint.textContent = '💡 원하시는 검정고시 평균 점수를 숫자란에 직접 입력(예: 96.1, 98.5 등)하세요. (학종/지원불가전형 자동제외)';
             groupCategory.style.display = 'block';
             groupType.style.display = 'block';
@@ -172,8 +173,8 @@ document.addEventListener('DOMContentLoaded', () => {
             detailGuideText.textContent = '수능 영역별 원점수, 백분위, 표준점수를 입력하시면 3개년 백분위 컷 기반으로 정시 지원이 진단됩니다.';
             scoreLabel.textContent = '수능 국/수/탐 평균 백분위 (0 ~ 100점)';
             scoreUnit.textContent = '점';
-            scoreSlider.min = '30'; scoreSlider.max = '100'; scoreSlider.step = '0.5'; scoreSlider.value = '85.0';
             scoreInput.min = '0'; scoreInput.max = '100'; scoreInput.value = '85.0';
+            calcScoreInput.value = '85.0';
             scoreHint.textContent = '💡 2023~2025 정시 합격자 70% Cutoff 백분위 데이터를 기반으로 정시를 진단합니다.';
             groupCategory.style.display = 'none';
             groupType.style.display = 'none';
@@ -584,4 +585,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         resultsContainer.innerHTML = html;
     }
+
+    // Run diagnosis on initial page load
+    runDiagnosis();
 });
