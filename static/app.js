@@ -398,12 +398,13 @@ document.addEventListener('DOMContentLoaded', () => {
         renderSubjectTable();
     });
 
-    renderSubjectTable();
+    let hasEngineRun = false;
 
     // 5. Search Trigger (하바나-트리니티 엔진 가동 버튼 클릭 시 동작)
     if (btnSearch) {
         btnSearch.addEventListener('click', (e) => {
             e.preventDefault();
+            hasEngineRun = true;
             btnSearch.style.transform = 'scale(0.96)';
             setTimeout(() => { btnSearch.style.transform = 'none'; }, 150);
             runDiagnosis(true);
@@ -488,9 +489,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Search is triggered STRICTLY when 'btnSearch' (하바나-트리니티 엔진 가동) is clicked!
+    // Auto-update after engine run, or hold until engine run button is clicked
+    const triggerFilterUpdate = () => {
+        if (hasEngineRun) {
+            runDiagnosis(false);
+        }
+    };
+
+    const filterDeptSelect = document.getElementById('filter-dept');
+    if (filterDeptSelect) {
+        filterDeptSelect.addEventListener('change', triggerFilterUpdate);
+    }
+    const filterUnivTypeSelect = document.getElementById('filter-univ-type');
+    if (filterUnivTypeSelect) {
+        filterUnivTypeSelect.addEventListener('change', triggerFilterUpdate);
+    }
+
+    filterRegion.addEventListener('change', triggerFilterUpdate);
+    filterCategory.addEventListener('change', triggerFilterUpdate);
+    filterType.addEventListener('change', triggerFilterUpdate);
+
     keywordSearch.addEventListener('input', () => {
-        if (currentResults.length > 0) {
+        if (hasEngineRun) {
             renderResults();
         }
     });
