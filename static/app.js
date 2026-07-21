@@ -471,11 +471,13 @@ document.addEventListener('DOMContentLoaded', () => {
         depts.sort((a, b) => a.localeCompare(b, 'ko'));
 
         const currentVal = filterDeptSelect.value;
-        filterDeptSelect.innerHTML = `<option value="">전체 학과 목록 (${depts.length}개 학과 - 가나다순)</option>` +
+        filterDeptSelect.innerHTML = `<option value="">🔍 희망 학과를 선택하세요 (${depts.length}개 학과 - 가나다순)</option>` +
             depts.map(d => `<option value="${d}">${d}</option>`).join('');
         
         if (depts.includes(currentVal)) {
             filterDeptSelect.value = currentVal;
+        } else {
+            filterDeptSelect.value = "";
         }
     }
 
@@ -489,7 +491,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const filterDeptSelect = document.getElementById('filter-dept');
     if (filterDeptSelect) {
-        filterDeptSelect.addEventListener('change', renderResults);
+        filterDeptSelect.addEventListener('change', () => {
+            renderResults();
+            const statusBar = document.getElementById('status-bar');
+            if (statusBar) {
+                statusBar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
     }
 
     const filterUnivTypeSelect = document.getElementById('filter-univ-type');
@@ -500,7 +508,9 @@ document.addEventListener('DOMContentLoaded', () => {
     filterRegion.addEventListener('change', runDiagnosis);
     filterCategory.addEventListener('change', runDiagnosis);
     filterType.addEventListener('change', runDiagnosis);
-    keywordSearch.addEventListener('input', renderResults);
+    keywordSearch.addEventListener('input', () => {
+        renderResults();
+    });
 
     // 6. Render Results
     function renderResults() {
