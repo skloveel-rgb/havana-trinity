@@ -56,24 +56,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const scoreUnit = document.getElementById('score-unit');
     const scoreHint = document.getElementById('score-hint');
 
-    // 1. Sync Direct Input Box with Slider & Hidden state
+    // 1. Sync Direct Input Box with Hidden state
     calcScoreInput.addEventListener('input', (e) => {
         const val = e.target.value;
         scoreInput.value = val;
-        scoreSlider.value = val;
+        if (scoreSlider) scoreSlider.value = val;
     });
 
     scoreInput.addEventListener('input', (e) => {
         const val = e.target.value;
         calcScoreInput.value = val;
-        scoreSlider.value = val;
+        if (scoreSlider) scoreSlider.value = val;
     });
 
-    scoreSlider.addEventListener('input', (e) => {
-        const val = parseFloat(e.target.value).toFixed(currentMode === 'susi-gpa' ? 2 : 1);
-        scoreInput.value = val;
-        calcScoreInput.value = val;
-    });
+    if (scoreSlider) {
+        scoreSlider.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value).toFixed(currentMode === 'susi-gpa' ? 2 : 1);
+            scoreInput.value = val;
+            calcScoreInput.value = val;
+        });
+    }
 
     calcScoreInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') runDiagnosis();

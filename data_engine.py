@@ -503,15 +503,15 @@ class AdmissionDataEngine:
                     status_code = 4
                 else:
                     # 사용자 정의 정밀 진단 기준:
-                    # 소신: 환산등급 대비 +0.50 등급 상향 (+0.30 < diff <= +0.50)
-                    # 적정: 환산등급 대비 -0.30 ~ +0.30 등급 (-0.30 <= diff <= +0.30)
-                    # 안정: 환산등급 대비 -0.30 ~ -1.20 등급 하향 (-1.20 <= diff < -0.30)
-                    if diff > 0.50 or diff < -1.20:
+                    # 소신: 환산등급 대비 +0.20 ~ +0.30 등급 상향 (+0.20 <= diff <= +0.30)
+                    # 적정: 환산등급 대비 -0.20 ~ +0.20 등급 (-0.20 <= diff < +0.20)
+                    # 안정: 환산등급 대비 -0.50 등급 하향 (-0.50 <= diff < -0.20)
+                    if diff > 0.30 or diff < -0.50:
                         continue
-                    elif diff > 0.30:
+                    elif diff >= 0.20:
                         status = "소신 (경쟁적)"
                         status_code = 2
-                    elif diff >= -0.30:
+                    elif diff >= -0.20:
                         status = "적정 (합격유력)"
                         status_code = 1
                     else:
