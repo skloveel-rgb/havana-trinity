@@ -146,6 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tab.addEventListener('touchstart', switchMode, { passive: true });
     });
 
+    function updateUIForMode(mode) {
         const toggleContainer = document.getElementById('toggle-container');
 
         if (mode === 'susi-gpa') {
