@@ -581,7 +581,7 @@ class AdmissionDataEngine:
 
         return results
 
-    def diagnose_jungsi(self, percentile_val, region_filter="전체", group_filter="전체", sort_by="status"):
+    def diagnose_jungsi(self, percentile_val, region_filter="전체", group_filter="전체", dept_filter="", sort_by="status"):
         """
         정시 표준 대입 상담 진단 범주 (상식선 범위 반영):
         - 소신 (경쟁적 / 현실적 상향): -4.0 <= diff < -1.0
@@ -598,6 +598,8 @@ class AdmissionDataEngine:
             df = df[df['지역'].str.contains(region_pattern, case=False, na=False)]
         if group_filter != "전체":
             df = df[df['군'].str.contains(group_filter, case=False, na=False)]
+        if dept_filter and dept_filter != "":
+            df = df[df['학과'].str.contains(dept_filter, case=False, na=False)]
 
         results = []
         user_p = float(percentile_val)

@@ -436,10 +436,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const filterUnivType = document.getElementById('filter-univ-type');
         const univTypeVal = filterUnivType ? filterUnivType.value : '전체';
+        const filterDeptSelect = document.getElementById('filter-dept');
+        const selectedDept = filterDeptSelect ? filterDeptSelect.value : '';
 
         if (currentMode === 'susi-gpa' || currentMode === 'susi-ged') {
             const inputType = currentMode === 'susi-gpa' ? 'gpa' : 'ged';
-            const url = `/api/analyze/susi?input_type=${inputType}&score=${val}&region=${encodeURIComponent(filterRegion.value)}&category=${encodeURIComponent(filterCategory.value)}&admission_type=${encodeURIComponent(filterType.value)}&univ_type=${encodeURIComponent(univTypeVal)}&limit=1500`;
+            const url = `/api/analyze/susi?input_type=${inputType}&score=${val}&region=${encodeURIComponent(filterRegion.value)}&category=${encodeURIComponent(filterCategory.value)}&admission_type=${encodeURIComponent(filterType.value)}&univ_type=${encodeURIComponent(univTypeVal)}&dept=${encodeURIComponent(selectedDept)}&limit=1500`;
             
             fetch(url)
                 .then(res => res.json())
@@ -449,7 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     renderResults();
                 });
         } else {
-            const url = `/api/analyze/jungsi?percentile=${val}&region=${encodeURIComponent(filterRegion.value)}&limit=1500`;
+            const url = `/api/analyze/jungsi?percentile=${val}&region=${encodeURIComponent(filterRegion.value)}&dept=${encodeURIComponent(selectedDept)}&limit=1500`;
             
             fetch(url)
                 .then(res => res.json())
@@ -471,13 +473,11 @@ document.addEventListener('DOMContentLoaded', () => {
         depts.sort((a, b) => a.localeCompare(b, 'ko'));
 
         const currentVal = filterDeptSelect.value;
-        filterDeptSelect.innerHTML = `<option value="">🔍 희망 학과를 선택하세요 (${depts.length}개 학과 - 가나다순)</option>` +
+        filterDeptSelect.innerHTML = `<option value="">🔍 전체/희망 학과 선택 (${depts.length}개 학과 - 가나다순)</option>` +
             depts.map(d => `<option value="${d}">${d}</option>`).join('');
         
         if (depts.includes(currentVal)) {
             filterDeptSelect.value = currentVal;
-        } else {
-            filterDeptSelect.value = "";
         }
     }
 
@@ -492,11 +492,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const filterDeptSelect = document.getElementById('filter-dept');
     if (filterDeptSelect) {
         filterDeptSelect.addEventListener('change', () => {
-            renderResults();
-            const statusBar = document.getElementById('status-bar');
-            if (statusBar) {
-                statusBar.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
+            runDiagnosis();
         });
     }
 

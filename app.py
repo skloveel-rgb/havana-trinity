@@ -66,6 +66,7 @@ def analyze_jungsi(
     percentile: float = Query(85.0, description="수능 백분위 평균"),
     region: str = Query("전체"),
     group: str = Query("전체"),
+    dept: str = Query(""),
     sort_by: str = Query("status", description="status: 소신->적정->안정, rank: 대학서열순"),
     limit: int = Query(50000)
 ):
@@ -73,6 +74,7 @@ def analyze_jungsi(
         percentile_val=percentile,
         region_filter=region,
         group_filter=group,
+        dept_filter=dept,
         sort_by=sort_by
     )
     return {
