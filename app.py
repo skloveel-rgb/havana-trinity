@@ -85,6 +85,10 @@ def analyze_jungsi(
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon():
+    return FileResponse(os.path.join(STATIC_DIR, "index.html"))
+
 @app.get("/")
 def read_root():
     index_file = os.path.join(STATIC_DIR, "index.html")
