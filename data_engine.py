@@ -269,6 +269,7 @@ class AdmissionDataEngine:
                     cols[4]: '세부전형',
                     cols[5]: '계열',
                     cols[6]: '학과',
+                    cols[8]: '일정_2026',
                     cols[10]: '지원자격_2026',
                     cols[12]: '전형요소_2026',
                     cols[14]: '최저학력기준_2026',
@@ -279,6 +280,10 @@ class AdmissionDataEngine:
                     cols[39]: '입결컷_2023',
                     cols[40]: '입결컷_2024',
                     cols[42]: '입결컷_2025',
+                    cols[55]: '학종_명문특목',
+                    cols[56]: '학종_특목자사',
+                    cols[57]: '학종_하위특목',
+                    cols[58]: '학종_상위일반',
                     cols[59]: '일반고_컷'
                 })
                 df_s = df_s.dropna(subset=['대학', '학과']).copy()
@@ -583,7 +588,15 @@ class AdmissionDataEngine:
                 'status_code': status_code,
                 'elements': elements,
                 'requirements': requirements,
-                'eligibility': eligibility if eligibility else '전체'
+                'eligibility': eligibility if eligibility else '전체',
+                'schedule': str(row['일정_2026']) if not pd.isna(row.get('일정_2026')) else '-',
+                'hakjong_scores': {
+                    'myungmun': str(row['학종_명문특목']) if not pd.isna(row.get('학종_명문특목')) else '-',
+                    'teukmok': str(row['학종_특목자사']) if not pd.isna(row.get('학종_특목자사')) else '-',
+                    'low_teukmok': str(row['학종_하위특목']) if not pd.isna(row.get('학종_하위특목')) else '-',
+                    'high_ilban': str(row['학종_상위일반']) if not pd.isna(row.get('학종_상위일반')) else '-',
+                    'ilban': str(row['일반고_컷']) if not pd.isna(row.get('일반고_컷')) else '-'
+                } if '종합' in t_type else None
             })
             
         if sort_by == "rank":

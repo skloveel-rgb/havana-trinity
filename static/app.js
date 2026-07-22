@@ -617,7 +617,19 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="detail-item"><span>모집인원</span><strong>${item.capacity} 명</strong></div>
                             <div class="detail-item"><span>'25 경쟁률</span><strong>${item.competition_2025} : 1</strong></div>
                             <div class="elem-box"><span>📋 전형 요소 및 평가비율</span><strong>${item.elements}</strong></div>
+                            ${item.schedule && item.schedule !== '-' ? `<div class="req-box" style="background: rgba(139, 92, 246, 0.1); border-color: rgba(139, 92, 246, 0.3); color: #c4b5fd;"><span>🗓️ 면접/논술 일정</span><strong>${item.schedule}</strong></div>` : ''}
                             <div class="req-box"><span>⚡ 수시 수능 최저학력기준</span><strong>${item.requirements}</strong></div>
+                            ${item.hakjong_scores ? `
+                            <div style="grid-column: span 2; background: rgba(236, 72, 153, 0.1); border: 1px solid rgba(236, 72, 153, 0.3); padding: 8px 12px; border-radius: 10px; font-size: 11.5px; color: #fbcfe8;">
+                                <div style="font-weight: 700; margin-bottom: 4px; color: #f9a8d4;"><i class="fa-solid fa-chart-line"></i> 고교 유형별 학종 참고 컷</div>
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                    <span>명문/특목: <strong>${item.hakjong_scores.myungmun}</strong></span>
+                                    <span>일반특목: <strong>${item.hakjong_scores.teukmok}</strong></span>
+                                    <span>상위일반: <strong>${item.hakjong_scores.high_ilban}</strong></span>
+                                    <span>일반고: <strong>${item.hakjong_scores.ilban}</strong></span>
+                                </div>
+                            </div>
+                            ` : ''}
                         </div>
                     </div>
                 `;
@@ -652,6 +664,97 @@ document.addEventListener('DOMContentLoaded', () => {
         html += '</div>';
 
         resultsContainer.innerHTML = html;
+    }
+
+    const btnPrint = document.getElementById('btn-print');
+    if (btnPrint) {
+        btnPrint.addEventListener('click', generatePrintLayout);
+    }
+
+    function generatePrintLayout() {
+        const printContainer = document.getElementById('print-container');
+        if (!printContainer || currentResults.length === 0) return;
+
+        let filtered = currentResults;
+        if (currentStatusFilter !== '전체') {
+            filtered = currentResults.filter(item => item.status.includes(currentStatusFilter));
+        }
+
+        // Group by Univ -> Category
+        const grouped = {};
+        filtered.forEach(item => {
+            if (!grouped[item.univ]) grouped[item.univ] = {};
+            const cat = item.category || '공통';
+            if (!grouped[item.univ][cat]) grouped[item.univ][cat] = [];
+            grouped[item.univ][cat].push(item);
+        });
+
+        const univs = Object.keys(grouped).sort((a, b) => a.localeCompare(b, 'ko'));
+        
+        let html = `
+            <div class="print-cover">
+                <img src="/static/logo.png" onerror="this.style.display='none'">
+                <h1>하바나-트리니티 대입 분석 결과 보고서</h1>
+                <h2>맞춤형 수시/정시 지원 가능 대학 진단</h2>
+                <div class="student-info">진단 일자: ${new Date().toLocaleDateString('ko-KR')}</div>
+            </div>
+        `;
+
+        univs.forEach(univ => {
+            html += `<div class="print-univ-group">
+                <div class="print-univ-title">${univ} <span>하바나-트리니티 엔진</span></div>
+            `;
+            
+            const cats = Object.keys(grouped[univ]).sort();
+            
+            html += `<table class="print-table">
+                <thead>
+                    <tr>
+                        <th style="width:12%">계열</th>
+                        <th style="width:20%">모집단위</th>
+                        <th style="width:18%">전형(세부)</th>
+                        <th style="width:8%">판정</th>
+                        <th style="width:12%">3개년 컷</th>
+                        <th style="width:30%">전형요소 / 최저학력기준</th>
+                    </tr>
+                </thead>
+                <tbody>
+            `;
+            
+            cats.forEach(cat => {
+                const items = grouped[univ][cat];
+                items.forEach((item, idx) => {
+                    let badgeClass = 'print-safe';
+                    if (item.status.includes('적정')) badgeClass = 'print-fit';
+                    if (item.status.includes('소신')) badgeClass = 'print-soso';
+                    
+                    const catCell = idx === 0 ? `<td rowspan="${items.length}" class="cat-header">${cat}</td>` : '';
+                    
+                    let reqs = item.requirements || '-';
+                    if (currentMode === 'jungsi-sat') reqs = item.elements || '-';
+                    
+                    html += `
+                        <tr>
+                            ${catCell}
+                            <td style="font-weight:bold;">${item.department}</td>
+                            <td>${item.type} ${item.sub_type ? `(${item.sub_type})` : ''}</td>
+                            <td><span class="status-badge-print ${badgeClass}">${item.status.split(' ')[0]}</span></td>
+                            <td style="font-weight:bold;">${item.cutoff_3yr}</td>
+                            <td style="text-align:left; font-size:10px;">
+                                <div>${item.elements || ''}</div>
+                                <div style="color:#666; margin-top:4px;">최저: ${reqs}</div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            });
+            html += `</tbody></table></div>`;
+        });
+
+        printContainer.innerHTML = html;
+        setTimeout(() => {
+            window.print();
+        }, 500);
     }
 
     // Initialize UI for GED default mode without auto-running engine on page load
