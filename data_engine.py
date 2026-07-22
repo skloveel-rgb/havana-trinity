@@ -221,6 +221,13 @@ UNIV_ABBR_MAPPING = {
     '을지대': '을지대|을지대학교'
 }
 
+# 대학교별 전형명 자동 변환 사전 (최신 수시 모집요강 기준)
+ADMISSION_NAME_MAPPING = {
+    # "대학명": {"엑셀 원본 세부전형명": "화면에 띄울 최신 전형명"}
+    # 예시: "국민대학교": {"학교생활우수자전형": "국민프런티어II전형"}
+    # 원장님이 확인하시는 대로 아래에 계속 추가해 주시면 됩니다.
+}
+
 class AdmissionDataEngine:
     def __init__(self):
         self.df_susi = None
@@ -459,6 +466,11 @@ class AdmissionDataEngine:
             region = str(row['지역'])
             t_type = str(row['전형'])
             sub_type = str(row['세부전형'])
+            
+            # 전형명 자동 변환 사전 적용
+            if univ in ADMISSION_NAME_MAPPING and sub_type in ADMISSION_NAME_MAPPING[univ]:
+                sub_type = ADMISSION_NAME_MAPPING[univ][sub_type]
+                
             eligibility = str(row['지원자격_2026']) if not pd.isna(row['지원자격_2026']) else ''
             elements_str = str(row['전형요소_2026']) if not pd.isna(row['전형요소_2026']) else ''
             
@@ -530,13 +542,13 @@ class AdmissionDataEngine:
                     status = "소신 (논술 100%/비교내신)"
                     status_code = 0
                 else:
-                    # 사용자 정의 정밀 진단 기준:
-                    # 소신: 환산등급 대비 +0.20 ~ +0.30 등급 상향 (+0.20 <= diff <= +0.30) -> 0순위 (최상단)
-                    # 적정: 환산등급 대비 -0.20 ~ +0.20 등급 (-0.20 <= diff < +0.20) -> 1순위
-                    # 안정: 환산등급 대비 -0.50 등급 하향 (-0.50 <= diff < -0.20) -> 2순위
-                    if diff > 0.30 or diff < -0.50:
+                    # 사용자 정의 정밀 진단 기준 (수정됨):
+                    # 소신: 환산등급 대비 +0.15 초과 ~ +0.20 이하 등급 상향 (0.15 < diff <= 0.20)
+                    # 적정: 환산등급 대비 -0.20 이상 ~ +0.15 이하 등급 (-0.20 <= diff <= 0.15)
+                    # 안정: 환산등급 대비 -0.30 이상 ~ -0.20 미만 등급 하향 (-0.30 <= diff < -0.20)
+                    if diff > 0.20 or diff < -0.30:
                         continue
-                    elif diff >= 0.20:
+                    elif diff > 0.15:
                         status = "소신 (경쟁적)"
                         status_code = 0
                     elif diff >= -0.20:
