@@ -569,6 +569,7 @@ class AdmissionDataEngine:
             results.append({
                 'id': f"susi_{row.name}",
                 'univ': univ,
+                'warning_badge': '⚠️ 일부 과목만 반영(백분위 뻥튀기 주의)' if any(kw in univ for kw in ['남서울대', '가천대', '삼육대', '서경대']) else '',
                 'tier': tier,
                 'region': region,
                 'type': t_type,
@@ -681,6 +682,7 @@ class AdmissionDataEngine:
             results.append({
                 'id': f"jungsi_{row.name}",
                 'univ': univ,
+                'warning_badge': '⚠️ 일부 과목만 반영(백분위 뻥튀기 주의)' if any(kw in univ for kw in ['남서울대', '가천대', '삼육대', '서경대']) else '',
                 'tier': tier,
                 'region': region,
                 'group': group,

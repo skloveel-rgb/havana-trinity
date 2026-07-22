@@ -604,6 +604,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="status-badge ${badgeClass}">${item.status.split(' ')[0]}</span>
                         </div>
                         <div class="res-dept">${item.department}</div>
+                        ${item.warning_badge ? `<div style="margin-top:6px; font-size:12.5px; color:#fbbf24; font-weight:700; background: rgba(251, 191, 36, 0.15); padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(251, 191, 36, 0.3);"><i class="fa-solid fa-triangle-exclamation"></i> ${item.warning_badge}</div>` : ''}
                         <div class="res-details">
                             <div class="cutoff-3yr-box">
                                 <span>3개년 평균 컷: <strong>${item.cutoff_3yr} 등급</strong></span>
@@ -644,6 +645,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="status-badge ${badgeClass}">${item.status.split(' ')[0]}</span>
                         </div>
                         <div class="res-dept">${item.department}</div>
+                        ${item.warning_badge ? `<div style="margin-top:6px; font-size:12.5px; color:#fbbf24; font-weight:700; background: rgba(251, 191, 36, 0.15); padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(251, 191, 36, 0.3);"><i class="fa-solid fa-triangle-exclamation"></i> ${item.warning_badge}</div>` : ''}
                         <div class="res-details">
                             <div class="cutoff-3yr-box">
                                 <span>3개년 백분위 컷: <strong>${item.cutoff_3yr} 점</strong></span>
